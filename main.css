@@ -1,0 +1,147 @@
+:root {
+    --foreground-darker-10: hwb(from var(--foreground-base-color) h calc(w - 10) calc(b + 10));
+    --foreground-darker-5: hwb(from var(--foreground-base-color) h calc(w - 5) calc(b + 5));
+    --foreground-base-color: #a8a494;
+    --foreground-lighter-4: hwb(from var(--foreground-base-color) h calc(w + 4) calc(b - 4));
+    --foreground-lighter-5: hwb(from var(--foreground-base-color) h calc(w + 5) calc(b - 5));
+    --foreground-lighter-8: hwb(from var(--foreground-base-color) h calc(w + 8) calc(b - 8));
+    --foreground-lighter-9: hwb(from var(--foreground-base-color) h calc(w + 9) calc(b - 9));
+    --foreground-lighter-10: hwb(from var(--foreground-base-color) h calc(w + 10) calc(b - 10));
+    --foreground-lighter-20: hwb(from var(--foreground-base-color) h calc(w + 20) calc(b - 20));
+
+    --background-base-color: #5e574f;
+    --background-lighter-5: hwb(from var(--background-base-color) h calc(w + 5) calc(b - 5));
+    --background-lighter-6: hwb(from var(--background-base-color) h calc(w + 6) calc(b - 6));
+
+    --engraved-color: #1e1a14;
+
+    --sun-color: #bfbdae;
+    --moon-color: #222; 
+
+    --night-color: #987;
+    --night-band-color: #111;
+    --screwhead-color: #44424a;
+    --screwhead-slot-color: hwb(from var(var(--screwhead-color)) h calc(w - 5) calc(b + 5));
+    --washer-color: #556164;
+    --gear-outline-color: #1e1002;
+    --outer-wheel-color: #d32;
+
+    --vitae-color: #fcc;
+    --mors-color: #000;
+    --red-vitae-color: #faa;
+    --grey-mors-color: #555;
+    --true-vitae-color: #f88;
+    --true-mors-color: #310;
+    
+    --salt-color: #dcb;
+    --air-color: #9cf;
+    --earth-color: #5b5;
+    --fire-color: #e43;
+    --water-color: #3dd;
+
+    --quintessence-base-color: #000;
+    --aether-base-color: #000;
+    --aether-red-color: #c00;
+    --aether-cyan-color: #7ca;
+    --aether-magenta-color: #f0f;
+
+    --quicksilver-color: #ccc;
+    --quickcopper-color: #e96;
+    --vaca-color: #111;
+    --beryl-color: #e00;
+    --lead-color: #455;
+    --wolfram-color: #557;
+    --tin-color: #665;
+    --vulcan-color: #f80;
+    --iron-color: #843;
+    --nickel-color: #aaa;
+    --copper-color: #d62;
+    --zinc-color: #8a8;
+    --silver-color: #888;
+    --sednum-color: #f1f;
+    --gold-color: #ed3;
+    --osmium-color: #639;
+    --uranium-color: #151;
+
+    --triplex-red: #f00;
+    --triplex-orange: #f80;
+    --triplex-grey: #888;
+}
+
+.hide, .hide * {
+    visibility: hidden;
+}
+
+.symbol {
+    stroke: white;
+}
+
+.symbol.strokeFill {
+    fill: white;
+}
+
+.noFill {
+    fill: none;
+}
+
+.engraved * {
+    stroke: var(--engraved-color);
+}
+
+.engraved .strokeFill {
+    fill: var(--engraved-color);
+}
+
+text {
+    font-family: "Crimson Pro", "Times New Roman", serif;
+    white-space: pre-line;
+}
+
+text.small {
+    font-size: 14px;
+}
+
+text.medium {
+    font-size: 30px;
+}
+
+text.large {
+    font-size: 40px;
+}
+
+text.italic {
+    font-style: italic;
+}
+
+text.handwritten {
+    font-family: "Cormorant";
+}
+
+text.memo {
+    font-family: "Caudex";
+}
+
+rect.label {
+    fill: white;
+}
+
+rect.label.description {
+    fill: #ddd;
+}
+
+.atom-outline {
+    r: 33;
+    fill: black;
+    stroke: lightgray;
+    stroke-width: 2;
+}
+
+.eclipse-sun {
+    fill: var(--sun-color);
+    stroke: var(--night-band-color);
+}
+
+.eclipse-moon {
+    fill: var(--moon-color);
+    stroke: var(--moon-color);
+}
