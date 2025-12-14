@@ -30,9 +30,13 @@ function distributeSVGs() {
     let symbolsElement = document.getElementById("symbols");
     let chart = document.getElementById("chart");
     let useElem;
-    while (useElem = chart.querySelector("use")) {
+    while (useElem = chart.querySelector("use:not(.handled)")) {
+        useElem.classList.add("handled")
         const T = useElem.getAttribute("transform") ?? "";
         const symbol = symbolsElement.getElementById(useElem.getAttribute("href").substring(1));
+        if (useElem.classList.contains("noClone") || symbol.classList.contains("noClone")) {
+            continue;
+        }
         let isSymbol = !(symbol.classList.contains("nonsymbol") || useElem.classList.contains("nonsymbol"));
         const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
         if (isSymbol) {
@@ -52,6 +56,16 @@ function distributeSVGs() {
         }
         useElem.insertAdjacentElement("afterend", group);
         useElem.remove();
+    }
+    clearHandledFlag()
+}
+
+function clearHandledFlag() {
+    for (let elem of Array.from(document.getElementsByClassName("handled"))) {
+        elem.classList.remove("handled");
+        if (!elem.classList.length) {
+            elem.removeAttribute("class");
+        }
     }
 }
 

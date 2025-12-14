@@ -39,6 +39,13 @@
     --fire-color: #e43;
     --water-color: #3dd;
 
+    --aerolith-color: #d74;
+    --ignistal-color: #c40;
+    --mistaline-color: #3cb;
+    --pyrolite-color: #b30;
+    --terramarine-color: #0a0;
+    --vaprorine-color: #a4a;
+
     --quintessence-base-color: #000;
     --aether-base-color: #000;
     --aether-red-color: #c00;
@@ -47,6 +54,7 @@
 
     --quicksilver-color: #ccc;
     --quickcopper-color: #e96;
+    --quicklime-color: #ddc;
     --vaca-color: #111;
     --beryl-color: #e00;
     --lead-color: #455;
