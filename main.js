@@ -37,6 +37,7 @@ function distributeSVGs() {
         if (useElem.classList.contains("noClone") || symbol.classList.contains("noClone")) {
             continue;
         }
+        let strokeData = useElem.getAttribute("data-stroke-color");
         let isSymbol = !(symbol.classList.contains("nonsymbol") || useElem.classList.contains("nonsymbol"));
         const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
         if (isSymbol) {
@@ -48,6 +49,14 @@ function distributeSVGs() {
             let cClone = c.cloneNode();
             if (isSymbol) {
                 cClone.classList.add("symbol");
+            }
+            if (strokeData) {
+                if (cClone.tagName == "use") {
+                    cClone.setAttribute("data-stroke-color", strokeData);
+                } else {
+                    cClone.classList.remove("symbol");
+                    cClone.setAttribute("stroke", strokeData);
+                }
             }
             group.insertAdjacentElement("beforeend", cClone);
         }

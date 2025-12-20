@@ -39,12 +39,20 @@
     --fire-color: #e43;
     --water-color: #3dd;
 
-    --aerolith-color: #d74;
-    --ignistal-color: #c40;
-    --mistaline-color: #3cb;
-    --pyrolite-color: #b30;
-    --terramarine-color: #0a0;
-    --vaprorine-color: #a4a;
+    --aerolith-color: #665;
+    --ignistal-color: #655;
+    --mistaline-color: #556;
+    --pyrolite-color: #645;
+    --terramarine-color: #565;
+    --vaprorine-color: #656;
+    
+    --aerolith-stroke-color: hsl(50, 100%, 60%);
+    --ignistal-stroke-color: hsl(30, 100%, 50%);
+    --mistaline-stroke-color: hsl(160, 100%, 40%);
+    --pyrolite-stroke-color: hsl(0, 100%, 40%);
+    --terramarine-stroke-color: hsl(110, 100%, 40%);
+    --vaprorine-stroke-color: hsl(280, 100%, 60%);
+    
 
     --quintessence-base-color: #000;
     --aether-base-color: #000;
