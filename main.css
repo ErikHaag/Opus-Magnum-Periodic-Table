@@ -4,6 +4,8 @@
     --foreground-base-color: #a8a494;
     --foreground-lighter-4: hwb(from var(--foreground-base-color) h calc(w + 4) calc(b - 4));
     --foreground-lighter-5: hwb(from var(--foreground-base-color) h calc(w + 5) calc(b - 5));
+    --foreground-lighter-6: hwb(from var(--foreground-base-color) h calc(w + 6) calc(b - 6));
+    --foreground-lighter-7: hwb(from var(--foreground-base-color) h calc(w + 7) calc(b - 7));
     --foreground-lighter-8: hwb(from var(--foreground-base-color) h calc(w + 8) calc(b - 8));
     --foreground-lighter-9: hwb(from var(--foreground-base-color) h calc(w + 9) calc(b - 9));
     --foreground-lighter-10: hwb(from var(--foreground-base-color) h calc(w + 10) calc(b - 10));
