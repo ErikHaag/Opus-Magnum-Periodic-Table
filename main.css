@@ -11,6 +11,8 @@
     --foreground-lighter-10: hwb(from var(--foreground-base-color) h calc(w + 10) calc(b - 10));
     --foreground-lighter-20: hwb(from var(--foreground-base-color) h calc(w + 20) calc(b - 20));
 
+    --background-darker-10: hwb(from var(--background-base-color) h calc(w - 10) calc(b + 10));
+    --background-darker-9: hwb(from var(--background-base-color) h calc(w - 9) calc(b + 9));
     --background-darker-5: hwb(from var(--background-base-color) h calc(w - 5) calc(b + 5));
     --background-base-color: #5e574f;
     --background-lighter-5: hwb(from var(--background-base-color) h calc(w + 5) calc(b - 5));
@@ -94,11 +96,11 @@
 }
 
 .symbol {
-    stroke: white;
+    stroke: #fefefe;
 }
 
 .symbol.strokeFill {
-    fill: white;
+    fill: #fefefe;
 }
 
 .noFill {
