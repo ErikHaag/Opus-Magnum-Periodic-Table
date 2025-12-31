@@ -34,34 +34,36 @@ function distributeSVGs() {
         useElem.classList.add("handled")
         const T = useElem.getAttribute("transform") ?? "";
         const symbol = symbolsElement.getElementById(useElem.getAttribute("href").substring(1));
-        if (useElem.classList.contains("noClone") || symbol.classList.contains("noClone")) {
-            continue;
-        }
-        let strokeData = useElem.getAttribute("data-stroke-color");
-        let isSymbol = !(symbol.classList.contains("nonsymbol") || useElem.classList.contains("nonsymbol"));
         const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
-        if (isSymbol) {
-            group.setAttribute("transform", (T + " translate(3, 3) scale(0.9)").trim());
-        } else {
-            group.setAttribute("transform", T);
-        }
-        for (const c of symbol.children) {
-            let cClone = c.cloneNode();
+        if (symbol) {
+            if (useElem.classList.contains("noClone") || symbol.classList.contains("noClone")) {
+                continue;
+            }
+            let strokeData = useElem.getAttribute("data-stroke-color");
+            let isSymbol = !(symbol.classList.contains("nonsymbol") || useElem.classList.contains("nonsymbol"));
             if (isSymbol) {
-                cClone.classList.add("symbol");
+                group.setAttribute("transform", (T + " translate(3, 3) scale(0.9)").trim());
+            } else {
+                group.setAttribute("transform", T);
             }
-            if (strokeData) {
-                if (cClone.tagName == "use") {
-                    cClone.setAttribute("data-stroke-color", strokeData);
-                } else {
-                    cClone.classList.remove("symbol");
-                    cClone.setAttribute("stroke", strokeData);
+            for (const c of symbol.children) {
+                let cClone = c.cloneNode();
+                if (isSymbol) {
+                    cClone.classList.add("symbol");
                 }
+                if (strokeData) {
+                    if (cClone.tagName == "use") {
+                        cClone.setAttribute("data-stroke-color", strokeData);
+                    } else {
+                        cClone.classList.remove("symbol");
+                        cClone.setAttribute("stroke", strokeData);
+                    }
+                }
+                group.insertAdjacentElement("beforeend", cClone);
             }
-            group.insertAdjacentElement("beforeend", cClone);
-        }
-        for (const c of useElem.classList) {
-            group.classList.add(c);
+            for (const c of useElem.classList) {
+                group.classList.add(c);
+            }
         }
         useElem.insertAdjacentElement("afterend", group);
         useElem.remove();
