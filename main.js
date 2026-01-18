@@ -26,7 +26,7 @@ async function loadSVGs() {
     distributeSVGs();
 }
 
-function distributeSVGs() {
+function distributeSVGs(force = false) {
     let symbolsElement = document.getElementById("symbols");
     let chart = document.getElementById("chart");
     let useElem;
@@ -36,7 +36,7 @@ function distributeSVGs() {
         const symbol = symbolsElement.getElementById(useElem.getAttribute("href").substring(1));
         const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
         if (symbol) {
-            if (useElem.classList.contains("noClone") || symbol.classList.contains("noClone")) {
+            if (!force && (useElem.classList.contains("noClone") || symbol.classList.contains("noClone"))) {
                 continue;
             }
             let strokeData = useElem.getAttribute("data-stroke-color");
@@ -202,6 +202,141 @@ function dragElements() {
     for (const c of document.querySelectorAll(".copy-transform")) {
         id = c.getAttribute("data-copy-transform-id");
         c.setAttribute("transform", document.getElementById(id).getAttribute("transform"));
+    }
+}
+
+// modify DOM for exporting
+function denormalize() {
+    distributeSVGs(true);
+
+    function normalizeColor(color) {
+        if (color == "none" || color.startsWith("url(")) {
+            return color;
+        }
+        let red = -1;
+        let green = -1;
+        let blue = -1;
+        if (color.startsWith("rgb(")) {
+            [red, green, blue] = color.substring(4, color.length - 1).split(",").map((e) => Number.parseFloat(e.trim()));
+        }
+
+        if (color.startsWith("color(srgb")) {
+            [red, green, blue] = color.substring(11, color.length - 1).split(" ").map(e => 255 * Number.parseFloat(e.trim()));
+        }
+
+        if (red == -1 || green == -1 || blue == -1) {
+            throw new Error("Unknown color \"" + color + "\"");
+        }
+
+        function clamp(i) {
+            if (i < 0n) {
+                return 0n;
+            } else if (i > 255n) {
+                return 255n;
+            }
+            return i;
+        }
+
+        // hex codes are well known and sufficient in most applications.
+        red = clamp(BigInt(Math.round(red)));
+        green = clamp(BigInt(Math.round(green)));
+        blue = clamp(BigInt(Math.round(blue)));
+        /*
+        if (red % 17n == 0n && green % 17n == 0n && blue % 17n == 0n) {
+            // compact form!
+            return "#" + red.toString(16)[0] + green.toString(16)[0] + blue.toString(16)[0];
+        }
+        */       
+        // force three hex digits
+        red += 0x100n;
+        green += 0x100n;
+        blue += 0x100n;
+        // then chop off the first one
+        return "#" + red.toString(16).substring(1) + green.toString(16).substring(1) + blue.toString(16).substring(1);
+    }
+
+    let elemStack = Array.from(document.getElementById("chart").children);
+    while (elemStack.length) {
+        let elem = elemStack.pop();
+        for (let c of elem.children) {
+            elemStack.push(c);
+        }
+        let flags = { circleR: false, fill: false, stop: false, stroke: false, text: false }
+        switch (elem.tagName) {
+            case "circle":
+                flags.circleR = true;
+                flags.fill = true;
+                flags.stroke = true;
+                break;
+            case "ellipse":
+            case "path":
+            case "rect":
+                flags.fill = true;
+                flags.stroke = true;
+                break;
+            case "line":
+                flags.stroke = true;
+                break;
+            case "stop":
+                flags.stop = true;
+                break;
+            case "text":
+                flags.fill = true;
+                flags.text = true;
+                break;
+            default:
+                break;
+        }
+
+        let computedStyle = window.getComputedStyle(elem);
+        if (flags.circleR) {
+            elem.setAttribute("r", computedStyle.r);
+        }
+
+        if (flags.fill) {
+            let f = normalizeColor(computedStyle.getPropertyValue("fill"));
+            if (f == "#000") {
+                elem.removeAttribute("fill");
+            } else {
+                elem.setAttribute("fill", f);
+            }
+        }
+
+        if (flags.stop) {
+            elem.setAttribute("stop-color", normalizeColor(computedStyle.stopColor));
+        }
+
+        if (flags.stroke) {
+            let s = normalizeColor(computedStyle.getPropertyValue("stroke"));
+            if (s == "none") {
+                elem.removeAttribute("stroke");
+            } else {
+                elem.setAttribute("stroke", s);
+            }
+
+            let w = computedStyle.strokeWidth;
+            if (w == "1px") {
+                elem.removeAttribute("stroke-width");
+            } else {
+                elem.setAttribute("stroke-width", w);
+            }
+        }
+
+        if (flags.text) {
+            elem.style.fontFamily = computedStyle.fontFamily.split(",")[0].trim();
+            elem.style.fontStyle = computedStyle.fontStyle;
+            elem.style.fontSize = computedStyle.fontSize;
+        }
+    }
+
+    // remove classes and data
+    elemStack = Array.from(document.getElementById("chart").children);
+    while (elemStack.length) {
+        let elem = elemStack.pop();
+        for (let c of elem.children) {
+            elemStack.push(c);
+        }
+        elem.removeAttribute("class");
     }
 }
 
