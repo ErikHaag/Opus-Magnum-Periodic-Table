@@ -69,7 +69,9 @@
     --repeat-color: #626459;
     --repeat-stroke-color: #222;
 
-    --triplex-red: #f00;
-    --triplex-orange: #f80;
-    --triplex-grey: #888;
+    --standard-bond: #666;
+
+    --triplex-bond-red: #f00;
+    --triplex-bond-orange: #f80;
+    --triplex-bond-grey: #888;
 }
