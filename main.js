@@ -32,12 +32,17 @@ function distributeSVGs(force = false) {
     let useElem;
     while (useElem = chart.querySelector("use:not(.handled)")) {
         useElem.classList.add("handled")
-        const T = useElem.getAttribute("transform") ?? "";
+        let T = useElem.getAttribute("transform") ?? "";
         const symbol = symbolsElement.getElementById(useElem.getAttribute("href").substring(1));
         const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
         if (symbol) {
             if (!force && (useElem.classList.contains("noClone") || symbol.classList.contains("noClone"))) {
                 continue;
+            }
+            if (symbol.classList.contains("nudge-up")) {
+                T = "translate(0, -3.75) " + T;
+            } else if (symbol.classList.contains("nudge-down")) {
+                T = "translate(0, 3.75) " + T;
             }
             let strokeData = useElem.getAttribute("data-stroke-color");
             let isSymbol = !(symbol.classList.contains("nonsymbol") || useElem.classList.contains("nonsymbol"));
