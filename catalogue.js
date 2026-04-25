@@ -1,6 +1,7 @@
 const svgNamespace = "http://www.w3.org/2000/svg";
 let symbolsElement;
 let collage;
+let finishFunction = () => {};
 
 document.addEventListener("DOMContentLoaded", () => {
     symbolsElement = document.getElementById("atomSymbols");
@@ -13,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
         symbolsElement.innerHTML += info[0];
         distributeSVGs();
         symbolsElement.remove();
+        finishFunction();
     });
 });
 
