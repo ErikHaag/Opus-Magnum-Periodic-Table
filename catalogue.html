@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang='en'>
-
 <head>
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <title>Atom Catalogue</title>
-    <link rel='stylesheet' href='atomColor.css'>
+    <title>Atom Calatogue</title>
+    <link rel='stylesheet' href='symbols/base.css'>
+    <link rel='stylesheet' href='bases/base.css'>
 </head>
-
 <body>
-    <svg id="atomSymbols" style="display: none;"></svg>
-    <svg id="collage"></svg>
+    <svg>
+        <g id="symbols" style="display: none;"></g>
+        <g id="bases" style="display: none;"></g>
+        <g id="atoms" style="display: none;"></g>
+        <g id="grid"></g>
+    </svg>
 </body>
-<script src="catalogue.js"></script>
-
+<script type="module" src="catalogue.js"></script>
 </html>

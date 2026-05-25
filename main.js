@@ -1,28 +1,22 @@
 async function loadSVGs() {
-    // semi-inelegant hack
-    let symbolsElement = document.getElementById("symbols");
-    let response = await fetch("https://cdn.jsdelivr.net/gh/ErikHaag/OpusMagnumStoichiometry/symbols.svg");
-    // let response = await fetch("symbols.svg");
-    let data = await response.text();
-    let info = /<symbol[\s\S]*<\/symbol>/.exec(data);
-    symbolsElement.innerHTML += info[0];
-    let useElem;
-    while (useElem = symbolsElement.querySelector("use")) {
-        const T = useElem.getAttribute("transform");
-        const symbolChildren = symbolsElement.getElementById(useElem.getAttribute("href").substring(1)).children;
-        if (T) {
-            for (const c of symbolChildren) {
-                let cClone = c.cloneNode();
-                cClone.setAttribute("transform", T + " " + (cClone.getAttribute("transform") ?? ""));
-                useElem.insertAdjacentElement("beforebegin", cClone);
-            }
-        } else {
-            for (const c of symbolChildren) {
-                useElem.insertAdjacentElement("beforebegin", c.cloneNode());
-            }
-        }
-        useElem.remove();
-    }
+    let symbolsElement = document.getElementById("importedSymbols");
+    let [symbolModule, baseModule, combineModule] = await Promise.all([
+        import("https://cdn.jsdelivr.net/gh/ErikHaag/Opus-Magnum-Assets/symbols/atomSymbolsExpand.js"),
+        import("https://cdn.jsdelivr.net/gh/ErikHaag/Opus-Magnum-Assets/bases/atomBasesExpand.js"),
+        import("https://cdn.jsdelivr.net/gh/ErikHaag/Opus-Magnum-Assets/combining/atomMerge.js")
+    ]);
+
+    let s = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    symbolsElement.appendChild(s);
+    let b = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    symbolsElement.appendChild(b);
+    let a = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    symbolsElement.appendChild(a);
+    await Promise.all([symbolModule.expandAtomSymbols(s, { mode: 3 }), baseModule.expandAtomBases(b, { mode: 1 })]);
+    combineModule.atomMerge(a, s, b, { mode: 1 });
+    b.remove();
+    s.innerHTML = "";
+    await symbolModule.expandAtomSymbols(s, { mode: 1 });
     distributeSVGs();
 }
 
@@ -31,39 +25,23 @@ function distributeSVGs(force = false) {
     let chart = document.getElementById("chart");
     let useElem;
     while (useElem = chart.querySelector("use:not(.handled)")) {
-        useElem.classList.add("handled")
         let T = useElem.getAttribute("transform") ?? "";
-        const symbol = symbolsElement.getElementById(useElem.getAttribute("href").substring(1));
+        useElem.classList.add("handled");
+0
+        const symbol = symbolsElement.querySelector(":scope " + useElem.getAttribute("href"));
+        if (symbol == null) {
+            console.log(useElem.getAttribute("href") + " was not found.");
+            continue;
+        }
         const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        group.setAttribute("transform", T);
         if (symbol) {
             if (!force && (useElem.classList.contains("noClone") || symbol.classList.contains("noClone"))) {
                 continue;
             }
-            if (symbol.classList.contains("nudge-up")) {
-                T = "translate(0, -3.75) " + T;
-            } else if (symbol.classList.contains("nudge-down")) {
-                T = "translate(0, 3.75) " + T;
-            }
-            let strokeData = useElem.getAttribute("data-stroke-color");
             let isSymbol = !(symbol.classList.contains("nonsymbol") || useElem.classList.contains("nonsymbol"));
-            if (isSymbol) {
-                group.setAttribute("transform", (T + " translate(3, 3) scale(0.9)").trim());
-            } else {
-                group.setAttribute("transform", T);
-            }
             for (const c of symbol.children) {
-                let cClone = c.cloneNode();
-                if (isSymbol) {
-                    cClone.classList.add("symbol");
-                }
-                if (strokeData) {
-                    if (cClone.tagName == "use") {
-                        cClone.setAttribute("data-stroke-color", strokeData);
-                    } else {
-                        cClone.classList.remove("symbol");
-                        cClone.setAttribute("stroke", strokeData);
-                    }
-                }
+                let cClone = c.cloneNode(true);
                 group.insertAdjacentElement("beforeend", cClone);
             }
             for (const c of useElem.classList) {
@@ -251,7 +229,7 @@ function denormalize() {
             // compact form!
             return "#" + red.toString(16)[0] + green.toString(16)[0] + blue.toString(16)[0];
         }
-        */       
+        */
         // force three hex digits
         red += 0x100n;
         green += 0x100n;

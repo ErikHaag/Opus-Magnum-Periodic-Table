@@ -41,23 +41,16 @@
     visibility: hidden;
 }
 
-.symbol {
-    stroke: #fefefe;
-}
-
-.symbol.strokeFill {
-    fill: #fefefe;
-}
-
 .noFill {
     fill: none;
 }
 
 .engraved * {
     stroke: var(--engraved-color);
+    fill: none;
 }
 
-.engraved .strokeFill {
+.engraved .fill {
     fill: var(--engraved-color);
 }
 
