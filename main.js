@@ -8,15 +8,20 @@ async function loadSVGs() {
 
     let s = document.createElementNS("http://www.w3.org/2000/svg", "g");
     symbolsElement.appendChild(s);
+    let sl = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    symbolsElement.appendChild(sl);
     let b = document.createElementNS("http://www.w3.org/2000/svg", "g");
     symbolsElement.appendChild(b);
     let a = document.createElementNS("http://www.w3.org/2000/svg", "g");
     symbolsElement.appendChild(a);
-    await Promise.all([symbolModule.expandAtomSymbols(s, { mode: 3 }), baseModule.expandAtomBases(b, { mode: 1 })]);
+    await symbolModule.loadAtomSymbols(s);
+    sl.innerHTML = s;
+    await baseModule.loadAtomBases(b);
+    symbolModule.unpackAtomSymbols(s, { mode: 3 })
+    symbolModule.unpackAtomSymbols(sl, { mode: 1 });
+    baseModule.unpackAtomBases(b, { mode: 1 });
     combineModule.atomMerge(a, s, b, { mode: 1 });
     b.remove();
-    s.innerHTML = "";
-    await symbolModule.expandAtomSymbols(s, { mode: 1 });
     distributeSVGs();
 }
 
@@ -27,7 +32,6 @@ function distributeSVGs(force = false) {
     while (useElem = chart.querySelector("use:not(.handled)")) {
         let T = useElem.getAttribute("transform") ?? "";
         useElem.classList.add("handled");
-0
         const symbol = symbolsElement.querySelector(":scope " + useElem.getAttribute("href"));
         if (symbol == null) {
             console.log(useElem.getAttribute("href") + " was not found.");
